@@ -1,0 +1,8 @@
+pyaes==1.6.1
+pydantic==1.10.7
+Pyrogram==2.0.104
+PySocks==1.7.1
+SQLAlchemy==2.0.10
+sqlalchemy2-stubs==0.0.2a34
+TgCrypto==1.2.5
+typing_extensions==4.5.0
