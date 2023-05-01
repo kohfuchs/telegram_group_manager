@@ -2,7 +2,6 @@ import logging
 import os
 import datetime
 import asyncio
-import html
 
 from pyrogram import filters
 from pyrogram.types import (InlineKeyboardMarkup,InlineKeyboardButton)
@@ -23,12 +22,12 @@ app = Client(
 bot_id=int(os.environ['BOT_ID'])
 
 @app.on_message(filters.command("status", "/"))
-async def bot_status(client, msg):
-    await msg.reply_text(f"{os.environ['BOT_NAME']} Online")
+async def bot_status(c, m):
+    await m.reply_text(f"{os.environ['BOT_NAME']} Online")
 
 @app.on_message(filters.command("id", "/"))
-async def status(client, msg):
-    await msg.reply_text(msg.chat.id)
+async def status(c, m):
+    await m.reply_text(m.chat.id)
 
 @app.on_message(filters.new_chat_members)
 async def me_invited_or_joined(c, m):
