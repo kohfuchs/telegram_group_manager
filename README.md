@@ -24,4 +24,4 @@ vim .env
 ```
 docker build -t tg_group_manager .
 docker run --env-file .env --name tg_group_manager -d -v ./db:/db tg_group_manager
-```x
+```
