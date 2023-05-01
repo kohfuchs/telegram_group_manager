@@ -4,7 +4,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy import create_engine
 import datetime
 
-engine = create_engine("sqlite:///GROUP_MANAGER.db")
+engine = create_engine("sqlite:////db/GROUP_MANAGER.db")
 
 class Base(DeclarativeBase):
     pass

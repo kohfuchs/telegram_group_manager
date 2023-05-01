@@ -8,6 +8,7 @@ WORKDIR /app
 COPY bot.py /app
 COPY sql.py /app
 COPY requirements.txt /app
+RUN mkdir /db
 
 # Installiere die Python-Pakete aus requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
