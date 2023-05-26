@@ -32,7 +32,7 @@ async def status(c, m):
 @app.on_message(filters.new_chat_members)
 async def me_invited_or_joined(c, m):
     if m.new_chat_members[0].id == bot_id:
-        logging.info(f'added to group {m.chat.title} ({m.chat.id})')
+        logging.info(f'bot added to group {m.chat.title} ({m.chat.id})')
         logging.debug(m)
         now = datetime.datetime.now()
         
