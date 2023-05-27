@@ -39,7 +39,7 @@ async def me_invited_or_joined(c, m):
         now = datetime.datetime.now()
         
         with Session(engine) as s:
-            results = s.query(Groups).filter_by(group_id=m.chat.id).all()
+            results = s.query(Groups).filter_by(group_id=m.chat.id).filter_by(group_deleted=True).all()
             if results:
                 await app.send_message(m.chat.id, text=f"Oh Oh, deine Gruppe ist schon bekannt und es gibt ein Problem. Bitte wende dich an die Admins der DACH Gruppe. Deine ID ist die {m.chat.id}")
                 await app.leave_chat(m.chat.id)
@@ -80,7 +80,7 @@ async def bot_to_group_check(c, m):
         await app.edit_message_reply_markup(
             m.message.chat.id, m.message.id,
             InlineKeyboardMarkup([[
-                InlineKeyboardButton("Angenommen", callback_data="ok")]]))
+                InlineKeyboardButton("Angenommen - ablehnen?", callback_data=f"decline+{group_query}")]]))
         await app.answer_callback_query(m.id, text="Gruppe wurde hinzugefügt")
         await app.send_message(group_query, text="Danke, deine Gruppe wurde angenommen und ist nun auf der DACH Liste zu finden.")
         logging.info(f'request accepted from {m.from_user.id}')
@@ -95,11 +95,26 @@ async def bot_to_group_check(c, m):
         await app.edit_message_reply_markup(
             m.message.chat.id, m.message.id,
             InlineKeyboardMarkup([[
-                InlineKeyboardButton("Abgehlent", callback_data="ok")]]))
+                InlineKeyboardButton("Abgehlent - annehmen?", callback_data=f"release+{group_query}")]]))
         await app.answer_callback_query(m.id, text="Gruppe wurde abgehlent")
-        await app.send_message(group_query, text="Tut mir leid, deine Gruppe wurde abhelent")
+        await app.send_message(group_query, text="Tut mir leid, deine Gruppe wurde abgelehnt")
         await app.leave_chat(group_query)
         logging.info(f'request declined from {m.from_user.id}')
+        return
+    
+    if answer == "release":
+        with Session(engine) as s:
+            result = s.query(Groups).filter_by(group_id=group_query).first()
+            if result:
+                s.delete(result)
+                s.commit()
+        await app.edit_message_reply_markup(
+            m.message.chat.id, m.message.id,
+            InlineKeyboardMarkup([[
+                InlineKeyboardButton("Angenommen - ablehnen?", callback_data=f"decline+{group_query}")]]))
+        await app.answer_callback_query(m.id, text="Gruppe wurde hinzugefügt")
+        await app.send_message(group_query, text="Danke, deine Gruppe wurde angenommen und ist nun auf der DACH Liste zu finden.")
+        logging.info(f'request released from {m.from_user.id}')
         return
 
 @app.on_message(filters.command("group_list", "/"))
@@ -111,6 +126,16 @@ async def send_group_list(c, m):
             x = await app.get_chat(group.group_id)
             reply_text.append(f"[{group.group_name}](t.me/{x.username})")
         
+    await m.reply_text("\n".join(reply_text), disable_web_page_preview=True)
+
+@app.on_message(filters.command("release", "/"))
+async def release_group(c, m):
+    reply_text = []
+    with Session(engine) as s:
+        deleted_groups = s.query(Groups).filter(Groups.group_deleted == True).order_by(Groups.group_name).all()
+        for group in deleted_groups:
+            x = await app.get_chat(group.group_id)
+            reply_text.append(f"[{group.group_name}](t.me/{x.username})")  
     await m.reply_text("\n".join(reply_text), disable_web_page_preview=True)
 
 
