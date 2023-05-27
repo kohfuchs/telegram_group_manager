@@ -20,6 +20,7 @@ app = Client(
 )
 
 bot_id=int(os.environ['BOT_ID'])
+admin_group=int(os.environ['ADMIN_GROUP'])
 
 @app.on_message(filters.command("status", "/"))
 async def bot_status(c, m):
@@ -48,7 +49,7 @@ async def me_invited_or_joined(c, m):
                     session.add(new_group)
                     session.commit()
                 await c.send_message(
-                    os.environ['ADMIN_GROUP'], 
+                    admin_group, 
                     f"Neue Gruppe Meldet sich an: {m.chat.title} ({m.chat.id})",
                     reply_markup=InlineKeyboardMarkup([[
                         InlineKeyboardButton("Zulassen", callback_data=f'accept+{m.chat.id}'),
