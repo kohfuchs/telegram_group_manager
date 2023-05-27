@@ -16,7 +16,8 @@ app = Client(
     os.environ['BOT_NAME'],
     api_id=os.environ['API_ID'],
     api_hash=os.environ['API_HASH'],
-    bot_token=os.environ['BOT_TOKEN']
+    bot_token=os.environ['BOT_TOKEN'],
+    workdir="/db"
 )
 
 bot_id=int(os.environ['BOT_ID'])
