@@ -1,8 +1,7 @@
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy import create_engine
 import datetime
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 engine = create_engine("sqlite:////db/GROUP_MANAGER.db")
 
