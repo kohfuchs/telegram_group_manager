@@ -20,7 +20,7 @@ app = Client(
     workdir="/db"
 )
 
-bot_id=int(os.environ['BOT_ID'])
+bot_id=int(os.environ['BOT_TOKEN'].split(":")[0])
 admin_group=int(os.environ['ADMIN_GROUP'])
 
 @app.on_message(filters.command("status", "/"))
